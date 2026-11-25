@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Mapa com Leaflet</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><!--  -->
+
+    <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    #mapa {
+      width: 100vw;
+      height: 100vh; /* Ocupa 100% da altura sem barra de rolagem */
+    }
+
+    /* Estilização para o botão flutuar sobre o mapa */
+    .meu-botao {
+      position: absolute;
+      top: 20px;       /* Distância do topo da tela */
+      right: 20px;     /* Distância da direita da tela */
+      z-index: 1000;   /* Garante que fique na frente das camadas do mapa */
+      
+      /* Estilos visuais do botão */
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-family: sans-serif;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.3); /* Sombra para destacar no mapa */
+    }
+
+    .meu-botao:hover {
+      background-color: #0056b3;
+    }
+  </style>
+
+
+</head>
+<body>
+  <div id="mapa"></div>
+  <script>
+    console.log(`⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠏⡸⠈⢢⡀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡸⠀⡇⠀⠀⠱⡄⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠃⢰⣀⠀⠀⠀⢃⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡰⠃⠀⠘⠙⠦⣀⠀⢸⡀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⠖⠉⠀⠀⠀⠀⠀⠀⠀⠁⠀⢇⠀⠀⠀⠀⠀
+⠀⠀⢀⣀⣀⣤⠤⠤⠤⠒⠒⠋⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⠀⠀⠘⣦⡴⠋⠀⠀
+⢸⡉⠁⢀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⡇⠀⠀⠋⣣⡤⠔⠂
+⠈⠳⣄⠀⠀⠈⠉⣶⠂⠀⠀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠉⠛⠁⠀⠀⠉⠆⠀⠀
+⠀⠀⠈⢦⡀⠀⠀⠸⠄⠀⠀⣿⣿⣿⠀⠀⠐⠒⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀⠀⠀
+⠀⠀⠀⠀⠈⠓⠢⠤⡄⠀⠀⠈⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⠃⠀⠀⠀
+⠀⠀⠀⠀⠀⢠⠤⠖⣻⠍⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⠜⠁⠀⠀⠀⠀
+⢀⡤⠤⠤⣀⠀⠠⠎⠉⢧⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠹⡀⠀⠀⠀⠀⠀
+⢎⠀⠀⠀⠀⠱⡄⠀⠀⠀⠈⠉⠉⠏⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⡇⠀⠀⠀⠀⠀
+⠈⠳⡄⠀⠀⠀⢸⡀⠀⠀⠀⠀⡼⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠀⠀⠀⠀⠀
+⠀⠀⢹⠀⠀⠀⠈⡇⠀⠀⠀⡼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⡀⠈⡇⠀⠀⠀⠀
+⠀⠀⠀⡇⠀⠀⢰⡇⠀⠀⡼⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⠧⠀⢸⡀⠀⠀⠀
+⠀⠀⠀⢷⠀⠀⢸⡇⠀⣰⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠃⠀⠀⠇⠀⠀⠀
+⠀⠀⠀⠘⡄⠀⠘⡇⢰⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠁⠀⠀⠀⢸⠀⠀⠀
+⠀⠀⠀⠀⠳⡄⠀⠘⢺⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀
+⠀⠀⠀⠀⠀⠈⠒⠦⠌⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⡄⠀⠀⢀⠀⠀⠀⢀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣄⠀⠘⣄⠀⠀⢸⠀⠀⠀⢸⠀⠀⠀⠀⣸⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠛⠦⣜⣆⠀⢸⡀⠀⠀⡼⠀⠀⣀⡴⠃⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠁⠉⠉⠉⠉⠉⠉⠁⠀⠀⠀⠀⠀`);
+  </script>
+  <a href="reclame_aqui.html" class="meu-botao">reclama aqui</a>
+
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="src/scripts/app.js"></script>
+</body>
+</html>

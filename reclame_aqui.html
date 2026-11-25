@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+    <html lang="pt-br">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="src/styles/style_reclama.css">
+        <title>reclamações aqui</title>
+    </head>
+    <body>
+        <h1>Reclamações Aqui</h1>
+        <p>Bem-vindo ao nosso site de reclamações!</p>
+        <!-- Adicionamos um ID no formulário para controlar o envio -->
+        <form id="meuFormulario">
+            <label for="nome">nome:</label>
+            <input type="text" id="nome" name="nome" required><br><br>
+            
+            <label for="email">Email:</label>
+            <!-- Corrigido o ID duplicado aqui -->
+            <input type="email" id="email" name="email" required><br><br>
+            
+            <label for="reclamacao">Sua Reclamação:</label>
+            <input type="text" id="reclamacao" name="reclamacao" required><br><br>
+            
+            <!-- Removemos o onclick daqui -->
+            <button type="submit">Enviar</button>
+        </form>
+        
+        <!-- ADICIONADO O type="module" AQUI -->
+        <script type="module" src="src/scripts/app_reclame.js"></script>
+    </body>
+</html>

@@ -1,0 +1,21 @@
+@startuml
+' uma pequena padronização
+skinparam linetype ortho
+skinparam roundcorner 30
+skinparam nodesep 120
+skinparam defaultFontSize 30
+skinparam ArrowThickness 5
+' coisas e eventos
+rectangle "problema ocorendo" as bo
+rectangle "alguem com o acesso ao site reporta tudo" as agente #LightCoral
+rectangle "pessoas vem isso do site e chamam ajuda" as pse #LightCoral
+rectangle "api com mapsbox ve tudo" as help #Cyan
+actor "pessoas vindo ajudar baseadas no site" as civis #PaleGoldenRod
+
+' como corre a ladainha
+help->civis
+civis -up-> bo
+pse-up->help
+agente -> pse
+bo-up->agente
+@enduml

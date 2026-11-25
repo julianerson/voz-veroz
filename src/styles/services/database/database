@@ -1,0 +1,18 @@
+CREATE DATABASE IF NOT EXISTS locales
+CHARACTER SET utf8mb4
+COLLATE utf8mb4_unicode_ci;
+
+USE locales;
+
+CREATE TABLE Locais (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) DEFAULT 'ANON',
+    email VARCHAR(150) DEFAULT 'ABON',
+    comentario TEXT NOT NULL,
+    latitude DECIMAL(10, 8) NOT NULL,
+    longitude DECIMAL(11, 8) NOT NULL,
+    raio INT NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+GRANT SELECT, INSERT ON locales.* TO 'usuario_app'@'%';
+FLUSH PRIVILEGES;
